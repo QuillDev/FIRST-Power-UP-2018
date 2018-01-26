@@ -3,5 +3,4 @@ First Robotics Competition robot code for the 2018 season, will probably see con
 
 **IF YOU ARE A MEMBER OF THE TEAM AND WOULD LIKE TO BE ADDED AS A CONTRIBUTER, MESSAGE ME ON DISCORD WITH YOUR GITHUB USERNAME**
 
-
-https://wiki.de.dariah.eu/download/attachments/6062679/TextGrid?version=5&modificationDate=1447840613401&api=v2
+![alt text](https://www.firstinspires.org/sites/default/files/uploads/rightimage/2018-power-up-logo-promo.jpg)
