@@ -1,1 +1,2 @@
-
+1/26/18: Made a joystick class for the Xbox controller, vars temporary and are subject to change, just a general overlook.
+1/25/18: Finally got eclipse to work, started working on main robot class, looking into the keybindings for an Xbox Controller
