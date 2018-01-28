@@ -1,17 +1,12 @@
-// Joystick Object
+logiCon = new Joystick(1);
+          double value;
+          value = logiCon-> GetRawAxis(1); .//left X
+          value = logiCon-> GetRawAxis(2); //left Y
+          value = logiCon-> getRawAxis(4); //right X
+          value = logiCon-> getRawAxis(5); //right Y
 
-Joystick *xboxCon
-    
-    public:
-        Robot(){
-        }
-            void RobotInit(){
-                xboxCon = new Joystick(1);
-                double value; int logic;
-                logic = xboxCon.getAButton(); //checks state of buttons (UP/DOWN)
-                logic = xboxCon.getBButton();
-                logic = xboxCon.getYButton();
-                logic = xboxCon.getXButton();
-                value = xboxCon.getX(); //retrieves how far the X of the stick is
-                value = xboxCon.getY(); //retrieves how far the Y of the stick is
-            }
+          boolean buttonValue;
+          buttonValue = logiCon.getRawButton(1);//A
+          buttonValue = logiCon.getRawButton(2);//B
+          buttonValue = logiCon.getRawButton(3);//X
+          buttonValue = logiCon.getRawButton(4);//Y
