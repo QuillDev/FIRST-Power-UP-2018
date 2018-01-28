@@ -9,4 +9,4 @@ logiCon = new Joystick(1);
           buttonValue = logiCon.getRawButton(1);//A
           buttonValue = logiCon.getRawButton(2);//B
           buttonValue = logiCon.getRawButton(3);//X
-          buttonValue = logiCon.getRawButton(4);//Y
+          buttonValue = logiCon.getRawButton(4);//Y 
