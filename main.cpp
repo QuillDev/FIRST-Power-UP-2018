@@ -5,33 +5,52 @@
 #include <Spark.h>
 #include <Timer.h>
 #include <WPILib.h>
-#include <XboxController.h>
 
 
 using namespace frc;
 
 class Robot: public IterativeRobot
 {
-    RobotDrive myRobot;
+    RobotDrive *difDrive;
     Joystick *logiCon; //controller
     LiveWindow *lw;
+    Gyro *gyro;
     int autoLoopCounter;
 
 public:
     Robot() :
-        myRobot(0,1), //these must be initialized in the same order
+        difDrive(0,1), //these must be initialized in the same order
         logiCon(1),      //as they are declared above.
         lw(NULL),
         autoLoopCounter(0){
 
-          myRobot.SetExpiration(0.1);
+          difDrive.SetExpiration(0.1);
 
         }
 
         void RobotStart(){
           lw = LiveWindow::GetInstance();
 
-          //controller???
+          difDrive = new RobotDrive(1, 2, 3, 4);
+          gyro = new AnalogGyro(1);
+        }
+
+        void AutoStart(){
+          autoLoopCounter = 0;
+        }
+
+        void AutoPeriod(){
+          while(IsAutonomous() && IsEnabled()){
+            float angle = gyro->GetAngle();
+            float kp = 0.03
+            myDrive->ArcadeDrive(-1.0, -angle*Kp);
+            wait(0.01)
+          }
+        }
+
+        void PilotStart(){
+          difDrive = new RobotDrive(1, 2, 3, 4);
+
           logiCon = new Joystick(1);
           double value;
           value = logiCon-> GetRawAxis(1); .//left X
@@ -44,25 +63,20 @@ public:
           buttonValue = logiCon.getRawButton(2);//B
           buttonValue = logiCon.getRawButton(3);//X
           buttonValue = logiCon.getRawButton(4);//Y
-          
+
+          /**
+          NOTE Add microsoft Xbox controller bindings
+          NOTE Add way to determine which controller is plugged in for easier bindings
+          **/
+
         }
 
-        void AutoStart(){
-          autoLoopCounter = 0;
-        }
-
-        void AutoPeriod(){
-          if(autoLoopCounter < 100){
-            myRobot.Drive(-0.5, 0);
-
-            autoLoopCounter++;
-          } else{
-            myRobot.Drive(0.0, 0.0);
+        void PilotControl(){
+          //SingleStick "Arcade Drive"
+          while (IsOperatorControl() && IsEnabled()){
+            difDrive->ArcadeDrive(logiCon);
+            wait(0.1);
           }
-        }
-
-        void PilotStart(){
-          //to be continued
         }
 
         void PilotPeriod(){
@@ -72,5 +86,5 @@ public:
         void TestPeriod(){
           lw -> Run();
         }
-                  
+
 };
