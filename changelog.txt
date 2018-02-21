@@ -1,2 +1,8 @@
+2/21/18
+- Made the Joystick work for practically any joystick(Just Slight Adjustments to get raw axis)
+- Got linear growing speed to work to allow for more control to the driver.
+- Bound Bumpers to move perfectly straight/back
+- Bound Button Keys to intake and arm (Will post mapping for controller)
+
 1/26/18: Made a joystick class for the Xbox controller, vars temporary and are subject to change, just a general overlook.
 1/25/18: Finally got eclipse to work, started working on main robot class, looking into the keybindings for an Xbox Controller
