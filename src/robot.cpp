@@ -2,7 +2,8 @@
 TODO:
 - Test Reset Function.
 - Test Arms and Swing.
-- Do wait and Autonomous during 6hr period.
+- Set Flag for the Swing.
+- Beef out autonomous
 
 **/
 
@@ -114,6 +115,8 @@ public:
 		// intake test
 		aButton = stick->GetRawButton(1);
 		bButton = stick->GetRawButton(2);
+		xButton = stick->GetRawButton(3);
+		yButton = stick->GetRawButton(4);
 
 
 		//Stick Logic
@@ -180,6 +183,15 @@ public:
 	else{
 		intake->Set(0);
 		intake2->Set(0);
+	}
+		
+	if(xButton == true){
+		swing->Set(.2);
+	} else if(yButton == true){
+		swing->Set(-.2);
+	}
+	else{
+		swing->Set(0);
 	}
 		
 
