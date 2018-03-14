@@ -127,7 +127,7 @@ public:
 		}
 		// MAKES IT SO IT NEVER GOES OVER 1
 		else if(ls >=1){
-			if(ls > 0){
+			if(ly > 0){
 				left->Set(-1);
 		}
 			else{
