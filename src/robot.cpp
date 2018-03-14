@@ -22,7 +22,7 @@ TODO:
 #include "WPILib.h"
 
 //custom headers
-#include "boltbeard.h" //I hope you're satisfied @StripedMonkey
+#include "boltbeard.h"
 
 using namespace std;
 using namespace frc;
@@ -42,7 +42,9 @@ public:
 		swing = new Spark(4);
 
 		//Timer
-		timer = new Timer();
+		autoTimer = new Timer();
+		intakeTimer = new Timer();
+		intakeTimer2 = new Timer();
 
 	}
 	//Pointers for Sparks
@@ -52,12 +54,15 @@ public:
 	Spark *intake2;
 	Spark *swing;
 	Joystick *stick;
-	Timer *timer;
+	autoTimer *timer;
+	intakeTimer *timer;
+	intakeTimer2 *timer;
 
 	//declare doubles
 	double ly, ls,lbs, ry, rs, rbs = 0;
 	const double dz = .2;
-	//declare ints
+
+	//Declare Loops
 	int i, h, m, n = 0;
 
 	//declare booleans
@@ -65,11 +70,11 @@ public:
 
 	void AutonomousInit() override {
 		m_autoSelected = m_chooser.GetSelected();
-		// m_autoSelected = SmartDashboard::GetString(
-		// 		"Auto Selector", kAutoNameDefault);
-		std::cout << "Auto selected: " << m_autoSelected << std::endl;
-		timer->Reset();
-		timer->Start();
+		/* m_autoSelected = SmartDashboard::GetString(
+			"Auto Selector", kAutoNameDefault);*/
+		std::cout << "Auto selected: " << m_autoSelected << std::endl; 
+		autoTimer->Reset();
+		autoTimer->Start();
 
 		if (m_autoSelected == kAutoNameCustom) {
 			// Custom Auto goes here
@@ -82,7 +87,7 @@ public:
 		if (m_autoSelected == kAutoNameCustom) {
 
 		} else {
-			if(timer->Get() < 2){
+			if(autoTimer->Get() < 2){
 				left->Set(.5);
 				right->Set(.5);
 			} else{
@@ -111,6 +116,7 @@ public:
 
 		// intake test
 		aButton = stick->GetRawButton(1);
+		bButton = stick->GetRawButton(2);
 
 
 		//Left Logic
@@ -203,16 +209,18 @@ public:
 	}
 
 	if(aButton == true ){
-		if(timer <= 2){
-		}
 		intake->Set(1);
 		intake2->Set(-.5);
-	} else {
 		
+	} else if(bButton == true){
+		intake->Set(-1);
+		intake2->Set(.5);
 	}
-
-}
-
+	else{
+		intake->Set(0);
+		intake2->Set(0);
+	}
+		
 
 	void TestPeriodic() {
 
