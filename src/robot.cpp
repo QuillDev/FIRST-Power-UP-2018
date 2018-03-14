@@ -117,15 +117,18 @@ public:
 		//IF IT IS LESS THAN ONE
 		if(abs(ly) > dz && ls < 1){
 			if(ly > 0){
-				left->Set(ls);
-				i++;
-			}
-			else{
 				left->Set(-ls);
 				i++;
 			}
+			else{
+				left->Set(ls);
+				i++;
+			}
 		}
+		
 		// MAKES IT SO IT NEVER GOES OVER 1
+		
+		// IF LY IS POSITIVE
 		else if(ls >=1){
 			if(ly > 0){
 				left->Set(-1);
