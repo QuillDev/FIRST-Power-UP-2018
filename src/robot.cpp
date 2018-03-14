@@ -18,9 +18,9 @@ TODO:
 
 //Include Spark.h
 #include <Spark.h>
+#include <Timer.h>
 #include <Joystick.h>
 #include <Math.h>
-#include "WPILib.h"
 
 //custom headers
 #include "boltbeard.h"
@@ -44,19 +44,16 @@ public:
 
 		//Timer
 		autoTimer = new Timer();
-		intakeTimer = new Timer();
-		intakeTimer2 = new Timer();
 
 	}
 	//Pointers for Sparks
-	Spark *left; left->SetInverted(true);
+	Spark *left;
 	Spark *right;
 	Spark *intake;
 	Spark *intake2;
 	Spark *swing;
 	Joystick *stick;
-	
-	autoTimer *timer;
+	Timer *autoTimer;
 
 	//declare doubles
 	double ly, ls,lbs, ry, rs, rbs = 0;
@@ -66,13 +63,13 @@ public:
 	int i, h, m, n = 0;
 
 	//declare booleans
-	bool lb, rb, aButton;
+	bool lb, rb, aButton, bButton, xButton, yButton;
 
 	void AutonomousInit() override {
 		m_autoSelected = m_chooser.GetSelected();
 		/* m_autoSelected = SmartDashboard::GetString(
 			"Auto Selector", kAutoNameDefault);*/
-		std::cout << "Auto selected: " << m_autoSelected << std::endl; 
+		std::cout << "Auto selected: " << m_autoSelected << std::endl;
 		autoTimer->Reset();
 		autoTimer->Start();
 
@@ -99,6 +96,7 @@ public:
 
 	void TeleopInit() {
 		stick = new Joystick(0);
+		left->SetInverted(true);
 	}
 
 	void TeleopPeriodic() {
@@ -121,21 +119,21 @@ public:
 
 		//Stick Logic
 		//IF IT IS LESS THAN ONE
-		
+
 		if(abs(ly) > dz){
 			left->Set(ly);
 		}
 		else{
 			left->Set(0);
 		}
-		
+
 		if(abs(ry) > dz){
 			right->Set(ry);
 		}
 		else{
 			right->Set(0);
 		}
-		
+
 	//IF LEFT BUMPER IS DOWN AND RIGHT/LEFT STICK ARE NOT ACTIVE AND IF LESS THAN 1
 	if(lb == true && abs(ly) <= dz && abs(ry) <= dz){
 		left->Set(lbs);
@@ -175,7 +173,7 @@ public:
 	if(aButton == true ){
 		intake->Set(1);
 		intake2->Set(-.5);
-		
+
 	} else if(bButton == true){
 		intake->Set(-1);
 		intake2->Set(.5);
@@ -184,7 +182,7 @@ public:
 		intake->Set(0);
 		intake2->Set(0);
 	}
-		
+
 	if(xButton == true){
 		swing->Set(.2);
 	} else if(yButton == true){
@@ -193,7 +191,8 @@ public:
 	else{
 		swing->Set(0);
 	}
-		
+	}
+
 
 	void TestPeriodic() {
 
