@@ -56,7 +56,7 @@ public:
 
 	//declare doubles
 	double ly, ls,lbs, ry, rs, rbs = 0;
-	const double dz = .1;
+	const double dz = .2;
 	//declare ints
 	int i, h, m, n = 0;
 
