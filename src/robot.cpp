@@ -57,6 +57,8 @@ public:
 	autoTimer *timer;
 	intakeTimer *timer;
 	intakeTimer2 *timer;
+	
+	left->SetInverted(true);
 
 	//declare doubles
 	double ly, ls,lbs, ry, rs, rbs = 0;
@@ -123,11 +125,11 @@ public:
 		//IF IT IS LESS THAN ONE
 		if(abs(ly) > dz && ls < 1){
 			if(ly > 0){
-				left->Set(-ls);
+				left->Set(ls);
 				i++;
 			}
 			else{
-				left->Set(ls);
+				left->Set(-ls);
 				i++;
 			}
 		}
@@ -137,10 +139,10 @@ public:
 		// IF LY IS POSITIVE
 		else if(ls >=1){
 			if(ly > 0){
-				left->Set(-1);
+				left->Set(1);
 		}
 			else{
-				left->Set(1);
+				left->Set(-1);
 			}
 		}
 		else{
