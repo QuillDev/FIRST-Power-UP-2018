@@ -1,3 +1,4 @@
+[![Discord](https://discordapp.com/api/guilds/239669568061046785/widget.png)](https://discord.gg/Fj9uwmT)
 <p align="center">
   <img src="http://frc971.org/sites/default/files/field/image/PowerUp_FacebookCover.jpg" width="350"/>
 </p>
