@@ -48,17 +48,14 @@ public:
 
 	}
 	//Pointers for Sparks
-	Spark *left;
+	Spark *left; left->SetInverted(true);
 	Spark *right;
 	Spark *intake;
 	Spark *intake2;
 	Spark *swing;
 	Joystick *stick;
-	autoTimer *timer;
-	intakeTimer *timer;
-	intakeTimer2 *timer;
 	
-	left->SetInverted(true);
+	autoTimer *timer;
 
 	//declare doubles
 	double ly, ls,lbs, ry, rs, rbs = 0;
@@ -107,8 +104,6 @@ public:
 		//sticks
 		ly = stick->GetRawAxis(1);
 		ry = stick->GetRawAxis(5);
-		ls = spd(i);
-		rs = spd(h);
 
 		//bumpers
 		lb = stick->GetRawButton(5);
@@ -121,68 +116,32 @@ public:
 		bButton = stick->GetRawButton(2);
 
 
-		//Left Logic
+		//Stick Logic
 		//IF IT IS LESS THAN ONE
-		if(abs(ly) > dz && ls < 1){
-			if(ly > 0){
-				left->Set(ls);
-				i++;
-			}
-			else{
-				left->Set(-ls);
-				i++;
-			}
-		}
 		
-		// MAKES IT SO IT NEVER GOES OVER 1
-		
-		// IF LY IS POSITIVE
-		else if(ls >=1){
-			if(ly > 0){
-				left->Set(1);
-		}
-			else{
-				left->Set(-1);
-			}
+		if(abs(ly) > dz){
+			left->Set(ly);
 		}
 		else{
 			left->Set(0);
-			i = 0;
 		}
-
-		//Right Logic
-		//IF RIGHT STICK IS LESS THAN ONE & GREATER THAN dz
-		if(abs(ry) > dz && rs < 1){
-			if(ry > 0){
-				right->Set(rs);
-				h++;
-			}
-			else{
-				right->Set(-rs);
-				h++;
-			}
+		
+		if(abs(ry) > dz){
+			right->Set(ry);
 		}
-		else if(rs >= 1){
-				if(rs > 0){
-					right->Set(1);
-				}
-				else{
-					right->Set(-1);
-				}
-			}
-		else {
+		else{
 			right->Set(0);
-			h = 0;
 		}
+		
 	//IF LEFT BUMPER IS DOWN AND RIGHT/LEFT STICK ARE NOT ACTIVE AND IF LESS THAN 1
-	if(lb == true && abs(ly) < dz && abs(ry) < dz){
-		left->Set(-lbs);
+	if(lb == true && abs(ly) <= dz && abs(ry) <= dz){
+		left->Set(lbs);
 		right->Set(lbs);
 		m++;
 	}
 	//IF
 	else if(lb == true && lbs >= 1 && abs(ly) < dz && abs(ry) < dz){
-		left->Set(-1);
+		left->Set(1);
 		right->Set(1);
 	}
 	//IF LEFT BUMPER IS NOT DOWN OR IF RIGHT/LEFT STICK ARE ACTIVE
@@ -193,9 +152,9 @@ public:
 
 	}
 	//IF RIGHT BUMPER IS DOWN
-	if(rb == true && abs(ly) < dz && abs(ry) < dz){
-		left->Set(lbs);
-		right->Set(-lbs);
+	if(rb == true && abs(ly) < dz && abs(ry) < dz && ry < 1){
+		left->Set(-rbs);
+		right->Set(-rbs);
 		n++;
 	}
 	//IF RIGHT BUMPER IS AT MAX SPEED AND LEFT/RIGHT GREATER THAN DEADZONE
