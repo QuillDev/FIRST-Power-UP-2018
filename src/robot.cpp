@@ -1,10 +1,7 @@
 /**robot.cpp
 TODO:
-- Test Reset Function.
-- Test Arms and Swing.
-- Set Flag for the Swing.
-- Beef out autonomous
-
+- TEST TEST TEST!
+- Pray
 **/
 
 #include <boltbeard.h>
@@ -36,8 +33,8 @@ public:
 		SmartDashboard::PutData("Auto Modes", &m_chooser);
 
 		//Create Sparks
-		left = new Spark(0);
-		right = new Spark(1);
+		right = new Spark(0);
+		left = new Spark(1);
 		intake = new Spark(2);
 		intake2 = new Spark(3);
 		swing = new Spark(4);
@@ -84,9 +81,9 @@ public:
 		if (m_autoSelected == kAutoNameCustom) {
 
 		} else {
-			if(autoTimer->Get() < 2){
-				left->Set(.5);
-				right->Set(.5);
+			if(autoTimer->Get() < 5){
+				left->Set(.4);
+				right->Set(-.4);
 			} else{
 				left->Set(0);
 				right->Set(0);
@@ -96,7 +93,7 @@ public:
 
 	void TeleopInit() {
 		stick = new Joystick(0);
-		left->SetInverted(true);
+		right->SetInverted(true);
 	}
 
 	void TeleopPeriodic() {
@@ -121,29 +118,29 @@ public:
 		//IF IT IS LESS THAN ONE
 
 		if(abs(ly) > dz){
-			left->Set(ly);
+			left->Set(-ly);
 		}
 		else{
 			left->Set(0);
 		}
 
 		if(abs(ry) > dz){
-			right->Set(ry);
+			right->Set(-ry);
 		}
 		else{
 			right->Set(0);
 		}
-
+		/*
 	//IF LEFT BUMPER IS DOWN AND RIGHT/LEFT STICK ARE NOT ACTIVE AND IF LESS THAN 1
 	if(lb == true && abs(ly) <= dz && abs(ry) <= dz){
-		left->Set(lbs);
-		right->Set(lbs);
+		left->Set(-lbs);
+		right->Set(-lbs);
 		m++;
 	}
 	//IF
 	else if(lb == true && lbs >= 1 && abs(ly) < dz && abs(ry) < dz){
-		left->Set(1);
-		right->Set(1);
+		left->Set(-1);
+		right->Set(-1);
 	}
 	//IF LEFT BUMPER IS NOT DOWN OR IF RIGHT/LEFT STICK ARE ACTIVE
 	else if(lb == false || abs(ly) > dz || abs(ry) > dz){
@@ -154,14 +151,14 @@ public:
 	}
 	//IF RIGHT BUMPER IS DOWN
 	if(rb == true && abs(ly) < dz && abs(ry) < dz && ry < 1){
-		left->Set(-rbs);
-		right->Set(-rbs);
+		left->Set(rbs);
+		right->Set(rbs);
 		n++;
 	}
 	//IF RIGHT BUMPER IS AT MAX SPEED AND LEFT/RIGHT GREATER THAN DEADZONE
 	else if(lb == true && rbs >= 1 && abs(ly) < dz && abs(ry) < dz){
 		left->Set(1);
-		right->Set(-1);
+		right->Set(1);
 	}
 	//IF RIGHT BUMPER IS NOT DOWN OR IF RIGHT/LEFT STICK ARE ACTIVE
 	else if(rb == false || abs(ly) > dz || abs(ry) > dz){
@@ -169,7 +166,7 @@ public:
 		right->Set(0);
 		n = 0;
 	}
-
+	/*
 	if(aButton == true ){
 		intake->Set(1);
 		intake2->Set(-.5);
@@ -191,6 +188,7 @@ public:
 	else{
 		swing->Set(0);
 	}
+	*/
 	}
 
 
