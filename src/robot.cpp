@@ -1,8 +1,11 @@
 /**robot.cpp
-TODO:
-- TEST TEST TEST!
-- Pray
-**/
+ TODO:
+ - Test Reset Function.
+ - Test Arms and Swing.
+ - Set Flag for the Swing.
+ - Beef out autonomous
+
+ **/
 
 #include <boltbeard.h>
 #include <iostream>
@@ -25,7 +28,7 @@ TODO:
 using namespace std;
 using namespace frc;
 
-class Robot : public IterativeRobot {
+class Robot: public IterativeRobot {
 public:
 	void RobotInit() {
 		m_chooser.AddDefault(kAutoNameDefault, kAutoNameDefault);
@@ -53,7 +56,7 @@ public:
 	Timer *autoTimer;
 
 	//declare doubles
-	double ly, ls,lbs, ry, rs, rbs = 0;
+	double ly, ls, lbs, ry, rs, rbs, rt, lt = 0;
 	const double dz = .2;
 
 	//Declare Loops
@@ -65,8 +68,10 @@ public:
 	void AutonomousInit() override {
 		m_autoSelected = m_chooser.GetSelected();
 		/* m_autoSelected = SmartDashboard::GetString(
-			"Auto Selector", kAutoNameDefault);*/
+		 "Auto Selector", kAutoNameDefault);*/
 		std::cout << "Auto selected: " << m_autoSelected << std::endl;
+		left->Set(0);
+		right->Set(0);
 		autoTimer->Reset();
 		autoTimer->Start();
 
@@ -78,25 +83,22 @@ public:
 	}
 
 	void AutonomousPeriodic() {
-		if (m_autoSelected == kAutoNameCustom) {
-
+		if (autoTimer->Get() <= 5) {
+			left->Set(.4);
+			right->Set(-.4);
 		} else {
-			if(autoTimer->Get() < 5){
-				left->Set(.4);
-				right->Set(-.4);
-			} else{
-				left->Set(0);
-				right->Set(0);
-			}
+			left->Set(0);
+			right->Set(0);
 		}
 	}
 
 	void TeleopInit() {
 		stick = new Joystick(0);
+		lt = abs(stick->GetRawAxis(2));
+		rt = abs(stick->GetRawAxis(3));
 		right->SetInverted(true);
-	}
-
-	void TeleopPeriodic() {
+		right->Set(0);
+		left->Set(0);
 		//sticks
 		ly = stick->GetRawAxis(1);
 		ry = stick->GetRawAxis(5);
@@ -104,8 +106,6 @@ public:
 		//bumpers
 		lb = stick->GetRawButton(5);
 		rb = stick->GetRawButton(6);
-		lbs = spd(m);
-		rbs = spd(n);
 
 		// intake test
 		aButton = stick->GetRawButton(1);
@@ -113,84 +113,49 @@ public:
 		xButton = stick->GetRawButton(3);
 		yButton = stick->GetRawButton(4);
 
+	}
+
+	void TeleopPeriodic() {
 
 		//Stick Logic
-		//IF IT IS LESS THAN ONE
-
-		if(abs(ly) > dz){
-			left->Set(-ly);
+		if (aButton == true) {
+			left->Set(0);
+			right->Set(0);
 		}
-		else{
+
+		if (abs(ly) > dz) {
+			left->Set(-ly);
+		} else {
 			left->Set(0);
 		}
 
-		if(abs(ry) > dz){
+		if (abs(ry) > dz) {
 			right->Set(-ry);
-		}
-		else{
+		} else {
 			right->Set(0);
 		}
-		/*
-	//IF LEFT BUMPER IS DOWN AND RIGHT/LEFT STICK ARE NOT ACTIVE AND IF LESS THAN 1
-	if(lb == true && abs(ly) <= dz && abs(ry) <= dz){
-		left->Set(-lbs);
-		right->Set(-lbs);
-		m++;
-	}
-	//IF
-	else if(lb == true && lbs >= 1 && abs(ly) < dz && abs(ry) < dz){
-		left->Set(-1);
-		right->Set(-1);
-	}
-	//IF LEFT BUMPER IS NOT DOWN OR IF RIGHT/LEFT STICK ARE ACTIVE
-	else if(lb == false || abs(ly) > dz || abs(ry) > dz){
-		left->Set(0);
-		right->Set(0);
-		m = 0;
+
+		if (lb == true) {
+			intake->Set(1);
+			intake2->Set(-1);
+		} else if (rb == true) {
+			intake->Set(-1);
+			intake2->Set(1);
+		} else {
+			intake->Set(0);
+			intake2->Set(0);
+		}
+
+		if(rt > dz){
+			swing->Set(.2);
+		} else if(lt > dz){
+			swing->Set(-.2);
+		} else{
+			swing->Set(0);
+		}
+
 
 	}
-	//IF RIGHT BUMPER IS DOWN
-	if(rb == true && abs(ly) < dz && abs(ry) < dz && ry < 1){
-		left->Set(rbs);
-		right->Set(rbs);
-		n++;
-	}
-	//IF RIGHT BUMPER IS AT MAX SPEED AND LEFT/RIGHT GREATER THAN DEADZONE
-	else if(lb == true && rbs >= 1 && abs(ly) < dz && abs(ry) < dz){
-		left->Set(1);
-		right->Set(1);
-	}
-	//IF RIGHT BUMPER IS NOT DOWN OR IF RIGHT/LEFT STICK ARE ACTIVE
-	else if(rb == false || abs(ly) > dz || abs(ry) > dz){
-		left->Set(0);
-		right->Set(0);
-		n = 0;
-	}
-	/*
-	if(aButton == true ){
-		intake->Set(1);
-		intake2->Set(-.5);
-
-	} else if(bButton == true){
-		intake->Set(-1);
-		intake2->Set(.5);
-	}
-	else{
-		intake->Set(0);
-		intake2->Set(0);
-	}
-
-	if(xButton == true){
-		swing->Set(.2);
-	} else if(yButton == true){
-		swing->Set(-.2);
-	}
-	else{
-		swing->Set(0);
-	}
-	*/
-	}
-
 
 	void TestPeriodic() {
 
