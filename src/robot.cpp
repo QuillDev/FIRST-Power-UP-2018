@@ -24,6 +24,7 @@
 
 //custom headers
 #include "boltbeard.h"
+#include "DriverStation.h"
 
 using namespace std;
 using namespace frc;
@@ -31,8 +32,9 @@ using namespace frc;
 class Robot: public IterativeRobot {
 public:
 	void RobotInit() {
-		m_chooser.AddDefault(kAutoNameDefault, kAutoNameDefault);
-		m_chooser.AddObject(kAutoNameCustom, kAutoNameCustom);
+		m_chooser.AddDefault(startSwitchLeft, startSwitchLeft);
+		m_chooser.AddObject(startSwitchRight, startSwitchRight);
+		m_chooser.AddObject(startOffSwitch, startOffSwitch);
 		SmartDashboard::PutData("Auto Modes", &m_chooser);
 
 		//Create Sparks
@@ -66,36 +68,61 @@ public:
 	bool lb, rb, aButton, bButton, xButton, yButton;
 
 	void AutonomousInit() override {
+		left->SetSafetyEnabled(false);
+		right->SetSafetyEnabled(false);
+		swing->SetSafetyEnabled(false);
+
 		m_autoSelected = m_chooser.GetSelected();
-		/* m_autoSelected = SmartDashboard::GetString(
-		 "Auto Selector", kAutoNameDefault);*/
 		std::cout << "Auto selected: " << m_autoSelected << std::endl;
-		left->Set(0);
-		right->Set(0);
-		autoTimer->Reset();
-		autoTimer->Start();
+		string gameData = frc::DriverStation::GetInstance().GetGameSpecificMessage();
 
-		if (m_autoSelected == kAutoNameCustom) {
-			// Custom Auto goes here
-		} else {
-			// Default Auto goes here
+		if (((m_autoSelected == startSwitchLeft) && (gameData[0] == 'L')) ||
+				((m_autoSelected == startSwitchRight) && (gameData[0] == 'R'))){
+			left->Set(0.3);
+			right->Set(0.3);
+
+			Wait(5);
+			cout << "Moving" << endl;
+
+			left->Set(0);
+			right->Set(0);
+
+			Wait(1);
+
+			swing->Set(.5);
+			Wait(4);
+			swing->Set(-.5);
+			Wait(4);
+			swing->Set(0);
+			cout << "Swinging" << endl;
 		}
-	}
+		else if(m_autoSelected == startOffSwitch){
+			left->Set(0.3);
+			right->Set(0.3);
 
-	void AutonomousPeriodic() {
-		if (autoTimer->Get() <= 5) {
-			left->Set(.4);
-			right->Set(-.4);
-		} else {
+			Wait(5);
+			cout << "Moving" << endl;
+
 			left->Set(0);
 			right->Set(0);
 		}
 	}
 
+
+	void AutonomousPeriodic() {
+		}
+
 	void TeleopInit() {
 		stick = new Joystick(0);
-		lt = abs(stick->GetRawAxis(2));
-		rt = abs(stick->GetRawAxis(3));
+		left->SetSafetyEnabled(true);
+		right->SetSafetyEnabled(true);
+		swing->SetSafetyEnabled(true);
+
+	}
+
+	void TeleopPeriodic() {
+		lt = stick->GetRawAxis(2);
+		rt = stick->GetRawAxis(3);
 		right->SetInverted(true);
 		right->Set(0);
 		left->Set(0);
@@ -107,15 +134,13 @@ public:
 		lb = stick->GetRawButton(5);
 		rb = stick->GetRawButton(6);
 
+
 		// intake test
 		aButton = stick->GetRawButton(1);
 		bButton = stick->GetRawButton(2);
 		xButton = stick->GetRawButton(3);
 		yButton = stick->GetRawButton(4);
 
-	}
-
-	void TeleopPeriodic() {
 
 		//Stick Logic
 		if (aButton == true) {
@@ -125,16 +150,22 @@ public:
 
 		if (abs(ly) > dz) {
 			left->Set(-ly);
+			stick->SetRumble(frc::GenericHID::kLeftRumble, abs(ly));
 		} else {
 			left->Set(0);
+			stick->SetRumble(frc::GenericHID::kLeftRumble, 0);
 		}
 
 		if (abs(ry) > dz) {
 			right->Set(-ry);
+			stick->SetRumble(frc::GenericHID::kRightRumble, abs(ry));
 		} else {
+
 			right->Set(0);
+			stick->SetRumble(frc::GenericHID::kRightRumble, 0);
 		}
 
+		//INTAKE
 		if (lb == true) {
 			intake->Set(1);
 			intake2->Set(-1);
@@ -146,10 +177,11 @@ public:
 			intake2->Set(0);
 		}
 
-		if(rt > dz){
-			swing->Set(.2);
-		} else if(lt > dz){
-			swing->Set(-.2);
+		//SWING
+		if(xButton == true){
+			swing->Set(.5);
+		} else if(yButton == true){
+			swing->Set(-.5);
 		} else{
 			swing->Set(0);
 		}
@@ -164,8 +196,9 @@ public:
 private:
 	LiveWindow& m_lw = *LiveWindow::GetInstance();
 	SendableChooser<string> m_chooser;
-	const string kAutoNameDefault = "Default";
-	const string kAutoNameCustom = "My Auto";
+	const string startSwitchLeft = "Starting on Switch Left";
+	const string startSwitchRight = "Starting on Switch Right";
+	const string startOffSwitch = "Starting Off Switch";
 	string m_autoSelected;
 };
 
